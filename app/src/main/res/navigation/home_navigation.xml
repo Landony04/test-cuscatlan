@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_navigation.xml"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.landony.cuscatlan.ui.home.HomeFragment"
+        android:label="fragment_home_list"
+        tools:layout="@layout/fragment_home_list">
+        <action
+            android:id="@+id/action_homeFragment_to_commentFragment"
+            app:destination="@id/commentsFragment"
+            app:popUpTo="@+id/homeExploreFragment"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="idPost"
+                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_photosFragment"
+            app:destination="@id/photosFragment"
+            app:popUpTo="@+id/homeExploreFragment"
+            app:popUpToInclusive="true">
+            <argument
+                android:name="idPost"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/commentsFragment"
+        android:name="com.landony.cuscatlan.ui.comments.CommentsFragment"
+        android:label="fragment_comments_list"
+        tools:layout="@layout/fragment_comments_list" />
+    <fragment
+        android:id="@+id/photosFragment"
+        android:name="com.landony.cuscatlan.ui.photos.PhotosFragment"
+        android:label="fragment_photo_list"
+        tools:layout="@layout/fragment_photo_list" />
+</navigation>
