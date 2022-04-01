@@ -1,14 +1,13 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.landony.cuscatlan"
         minSdk 21
         targetSdk 31
         versionCode 1
@@ -30,6 +29,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
     packagingOptions {
         exclude "**/attach_hotspot_windows.dll"
         exclude "META-INF/licenses/**"
@@ -40,20 +40,30 @@ android {
         exclude 'META-INF/proguard/androidx-annotations.pro'
         exclude 'META-INF/androidx.exifinterface_exifinterface.version'
         exclude 'META-INF/gradle/incremental.annotation.processors'
+        pickFirst 'lib/x86_64/libnative-lib.so'
+        pickFirst 'lib/arm64-v8a/libnative-lib.so'
+        pickFirst 'lib/armeabi-v7a/libnative-lib.so'
+        pickFirst 'lib/x86/libnative-lib.so'
     }
 }
 
 dependencies {
-    implementation project(":data")
-    implementation project(":domain")
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    //inject dependency
+    implementation project(':domain')
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'com.google.dagger:hilt-android:2.38.1'
     implementation 'com.google.dagger:hilt-android-compiler:2.38.1'
+    kapt "com.google.dagger:hilt-android-compiler:2.38.1"
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    //Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
+    implementation 'androidx.compose.runtime:runtime-livedata:1.2.0-alpha01'
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
