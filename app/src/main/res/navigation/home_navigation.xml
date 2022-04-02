@@ -32,7 +32,13 @@
         android:id="@+id/commentsFragment"
         android:name="com.landony.cuscatlan.ui.comments.CommentsFragment"
         android:label="fragment_comments_list"
-        tools:layout="@layout/fragment_comments_list" />
+        tools:layout="@layout/fragment_comments_list">
+        <action
+            android:id="@+id/action_homeFragment_to_commentFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@+id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/photosFragment"
         android:name="com.landony.cuscatlan.ui.photos.PhotosFragment"

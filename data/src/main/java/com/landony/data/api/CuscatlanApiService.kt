@@ -1,8 +1,10 @@
 package com.landony.data.api
 
 import com.landony.data.api.models.PostsItemResponse
+import com.landony.data.api.models.ResultCommentsResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface CuscatlanApiService {
 
@@ -12,4 +14,12 @@ interface CuscatlanApiService {
      */
     @GET(ApiRoutes.POSTS_GET_ALL)
     suspend fun getGitHubUsers(): Response<ArrayList<PostsItemResponse>>
+
+    /**
+     * Cuscatlan SERVICES
+     * fun getCommentsByPost has service path
+     * @param idPost for apply filter to service
+     */
+    @GET(ApiRoutes.POSTS_GET_COMMENTS_BY_POST)
+    suspend fun getCommentsByPost(@Path("idPost") idPost: String): Response<ArrayList<ResultCommentsResponse>>
 }

@@ -1,6 +1,9 @@
 package com.landony.data.di
 
+import com.landony.domain.repositories.CommentsByPostRepository
 import com.landony.domain.repositories.PostsRepository
+import com.landony.domain.useCases.CommentsByPostUseCase
+import com.landony.domain.useCases.CommentsByPostUseCaseImpl
 import com.landony.domain.useCases.PostsUseCase
 import com.landony.domain.useCases.PostsUseCaseImpl
 import dagger.Module
@@ -23,4 +26,15 @@ object UseCaseModule {
     fun providePosts(
         postsRepository: PostsRepository
     ): PostsUseCase = PostsUseCaseImpl(postsRepository)
+
+    /**
+     * GET ALL COMMENTS BY POST
+     * @provides of COMMENTS
+     * @param commentsByPostRepository
+     */
+    @Provides
+    @ViewModelScoped
+    fun provideComments(
+        commentsByPostRepository: CommentsByPostRepository
+    ): CommentsByPostUseCase = CommentsByPostUseCaseImpl(commentsByPostRepository)
 }
