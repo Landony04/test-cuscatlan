@@ -1,22 +1,29 @@
 package com.landony.cuscatlan.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.landony.cuscatlan.R
-import com.landony.cuscatlan.ui.home.placeholder.PlaceholderContent
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.landony.cuscatlan.databinding.FragmentHomeListBinding
+import com.landony.cuscatlan.viewModels.PostsViewModel
+import com.landony.domain.common.Result
+import com.landony.domain.entities.PostsUI
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * A fragment representing a list of Items.
  */
-class HomeFragment : Fragment() {
+@AndroidEntryPoint
+open class HomeFragment : Fragment() {
 
     private var columnCount = 1
+    private var isProgress = false
+
+    private val postsViewModel: PostsViewModel by activityViewModels()
+    private lateinit var homeBinding: FragmentHomeListBinding
+    private lateinit var adapter: HomeRecyclerViewAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,28 +37,61 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_home_list, container, false)
+        homeBinding = FragmentHomeListBinding.inflate(inflater, container, false)
 
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
+        return homeBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpObserver()
+        postsViewModel.getAllPosts()
+    }
+
+    private fun setUpObserver() {
+        postsViewModel.postsInformation.observe(requireActivity()) {
+            when (it) {
+                is Result.Loading -> {
+                    isProgress = true
+                    homeBinding.list.visibility = View.GONE
+                    homeBinding.progressBar.visibility = View.VISIBLE
                 }
-                adapter = HomeRecyclerViewAdapter(PlaceholderContent.ITEMS)
+
+                is Result.Success -> {
+                    homeBinding.progressBar.visibility = View.GONE
+                    homeBinding.list.visibility = View.VISIBLE
+                    setupPostsAdapter(it.data)
+                    isProgress = false
+                }
+
+                is Result.Failure -> {
+                    homeBinding.progressBar.visibility = View.GONE
+                    homeBinding.list.visibility = View.GONE
+                    isProgress = false
+                }
             }
         }
-        return view
+    }
+
+    private fun setupPostsAdapter(allValues: ArrayList<PostsUI>) {
+        if (allValues.isNotEmpty()) {
+            homeBinding.list.setHasFixedSize(true)
+            adapter = HomeRecyclerViewAdapter(
+                allValues
+            ) {
+
+            }
+
+            homeBinding.list.adapter = adapter
+            adapter.submitList(allValues)
+        } else {
+            homeBinding.list.visibility = View.GONE
+        }
     }
 
     companion object {
-
-        // TODO: Customize parameter argument names
         const val ARG_COLUMN_COUNT = "column-count"
 
-        // TODO: Customize parameter initialization
-        @JvmStatic
         fun newInstance(columnCount: Int) =
             HomeFragment().apply {
                 arguments = Bundle().apply {

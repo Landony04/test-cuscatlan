@@ -1,10 +1,10 @@
 package com.landony.data.util
 
 import com.google.gson.GsonBuilder
-import com.landony.data.api.models.ResultPostsResponse
-import com.landony.data.mappers.toResultResponseUI
+import com.landony.data.api.models.PostsItemResponse
+import com.landony.data.mappers.toPostsUI
 import com.landony.domain.common.Result
-import com.landony.domain.entities.PostsResultUI
+import com.landony.domain.entities.PostsUI
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -13,14 +13,14 @@ open class BaseRepository {
 
     private fun parseError(
         httpException: HttpException
-    ): PostsResultUI? {
+    ): PostsUI? {
         return try {
             val gson = GsonBuilder().create()
             val messageError = httpException.response()?.errorBody()?.string()
             val errorResponse =
-                gson.fromJson(messageError, ResultPostsResponse::class.java)
+                gson.fromJson(messageError, PostsItemResponse::class.java)
             Timber.e("ErrorResponse: $errorResponse")
-            errorResponse.toResultResponseUI()
+            errorResponse.toPostsUI()
         } catch (e: Exception) {
             Timber.e("ParseError: $e")
             null
