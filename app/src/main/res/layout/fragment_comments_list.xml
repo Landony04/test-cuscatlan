@@ -1,13 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="com.landony.cuscatlan.ui.comments.CommentsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.comments.CommentsFragment"
-    tools:listitem="@layout/fragment_comments" />
+    android:background="@color/white"
+    tools:context=".ui.MainActivity">
+
+    <ProgressBar
+        android:id="@+id/progressBar_comments"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@android:color/holo_orange_light"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list_comments"
+        android:name="com.landony.cuscatlan.ui.comments.CommentsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context=".ui.comments.CommentsFragment"
+        tools:listitem="@layout/fragment_comments" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.landony.cuscatlan.databinding.FragmentHomeListBinding
+import com.landony.cuscatlan.ui.MainActivity
 import com.landony.cuscatlan.viewModels.PostsViewModel
 import com.landony.domain.common.Result
 import com.landony.domain.entities.PostsUI
@@ -44,6 +46,8 @@ open class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity?)?.title = "POSTS"
+        (activity as MainActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
         setUpObserver()
         postsViewModel.getAllPosts()
     }
@@ -79,7 +83,9 @@ open class HomeFragment : Fragment() {
             adapter = HomeRecyclerViewAdapter(
                 allValues
             ) {
-
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToCommentFragment(it)
+                )
             }
 
             homeBinding.list.adapter = adapter

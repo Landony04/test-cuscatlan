@@ -1,11 +1,10 @@
 package com.landony.cuscatlan.viewModels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.landony.domain.common.Result
+import com.landony.domain.entities.CommentsByPostResultUI
 import com.landony.domain.entities.PostsUI
+import com.landony.domain.useCases.CommentsByPostUseCase
 import com.landony.domain.useCases.PostsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -20,11 +19,18 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class PostsViewModel @Inject constructor(
-    private val postsUseCase: PostsUseCase
+    private val postsUseCase: PostsUseCase,
+    private val commentsByPostUseCase: CommentsByPostUseCase
 ) : ViewModel() {
 
     private val _postsInformation = MutableLiveData<Result<ArrayList<PostsUI>>>()
     val postsInformation: LiveData<Result<ArrayList<PostsUI>>> get() = _postsInformation
+
+    private val _commentsByPostParameters = MutableLiveData<String>()
+    private val _commentsByPostInformation = _commentsByPostParameters.switchMap {
+        commentsByPostUseCase.invokeCommentsByPost(it).asLiveData(viewModelScope.coroutineContext)
+    }
+    val commentsInformation: LiveData<Result<ArrayList<CommentsByPostResultUI>>> get() = _commentsByPostInformation
 
     fun getAllPosts() {
         viewModelScope.launch {
@@ -33,5 +39,9 @@ class PostsViewModel @Inject constructor(
                     _postsInformation.value = it
                 }
         }
+    }
+
+    fun getCommentsByPost(idPost: String) {
+        _commentsByPostParameters.value = idPost
     }
 }
