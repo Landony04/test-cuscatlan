@@ -15,7 +15,7 @@ import com.landony.domain.entities.PostsUI
  */
 class HomeRecyclerViewAdapter(
     private val values: ArrayList<PostsUI>,
-    private val onCallInfoPosts: (postsId: String) -> Unit
+    private val itemSelectedCallback: ItemSelectedCallback,
 ) : ListAdapter<PostsUI, HomeRecyclerViewAdapter.ViewHolder>(UserDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -49,17 +49,22 @@ class HomeRecyclerViewAdapter(
             binding.body.text = posts.body
 
             binding.photos.setOnClickListener {
-                onCallInfoPosts(posts.id.toString())
+                itemSelectedCallback.itemSelected(posts.id.toString(), VIEW_PHOTOS)
             }
 
             binding.comments.setOnClickListener {
-                onCallInfoPosts(posts.id.toString())
+                itemSelectedCallback.itemSelected(posts.id.toString(), VIEW_COMMENTS)
             }
         }
 
         override fun toString(): String {
             return super.toString() + " '" + contentView.text + "'"
         }
+    }
+
+    companion object {
+        const val VIEW_PHOTOS = "PHOTOS"
+        const val VIEW_COMMENTS = "COMMENTS"
     }
 }
 
@@ -75,4 +80,8 @@ private class UserDiffCallBack : DiffUtil.ItemCallback<PostsUI>() {
         newItem: PostsUI
     ): Boolean =
         oldItem.id == newItem.id
+}
+
+interface ItemSelectedCallback {
+    fun itemSelected(idPost: String, nextView: String)
 }

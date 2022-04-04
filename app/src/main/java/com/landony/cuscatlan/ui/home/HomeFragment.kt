@@ -18,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * A fragment representing a list of Items.
  */
 @AndroidEntryPoint
-open class HomeFragment : Fragment() {
+open class HomeFragment : Fragment(), ItemSelectedCallback {
 
     private var columnCount = 1
     private var isProgress = false
@@ -81,12 +81,9 @@ open class HomeFragment : Fragment() {
         if (allValues.isNotEmpty()) {
             homeBinding.list.setHasFixedSize(true)
             adapter = HomeRecyclerViewAdapter(
-                allValues
-            ) {
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToCommentFragment(it)
-                )
-            }
+                allValues,
+                this
+            )
 
             homeBinding.list.adapter = adapter
             adapter.submitList(allValues)
@@ -97,12 +94,21 @@ open class HomeFragment : Fragment() {
 
     companion object {
         const val ARG_COLUMN_COUNT = "column-count"
+    }
 
-        fun newInstance(columnCount: Int) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
+    override fun itemSelected(idPost: String, nextView: String) {
+        when (nextView) {
+            HomeRecyclerViewAdapter.VIEW_PHOTOS -> {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToPhotosFragment(idPost = idPost)
+                )
             }
+
+            else -> {
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToCommentFragment(idPost = idPost)
+                )
+            }
+        }
     }
 }

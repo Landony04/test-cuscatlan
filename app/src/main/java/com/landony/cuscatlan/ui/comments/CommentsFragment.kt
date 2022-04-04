@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class CommentsFragment : Fragment() {
 
     private var columnCount = 1
-    private var isProgress = false
     private var idPost = ""
 
     private lateinit var fragmentCommentsBinding: FragmentCommentsListBinding
@@ -61,7 +60,6 @@ class CommentsFragment : Fragment() {
         postsViewModel.commentsInformation.observe(requireActivity()) {
             when (it) {
                 is Result.Loading -> {
-                    isProgress = true
                     fragmentCommentsBinding.listComments.visibility = View.GONE
                     fragmentCommentsBinding.progressBarComments.visibility = View.VISIBLE
                 }
@@ -70,13 +68,11 @@ class CommentsFragment : Fragment() {
                     fragmentCommentsBinding.progressBarComments.visibility = View.GONE
                     fragmentCommentsBinding.listComments.visibility = View.VISIBLE
                     setupPostsAdapter(it.data)
-                    isProgress = false
                 }
 
                 is Result.Failure -> {
                     fragmentCommentsBinding.progressBarComments.visibility = View.GONE
                     fragmentCommentsBinding.listComments.visibility = View.GONE
-                    isProgress = false
                 }
             }
         }

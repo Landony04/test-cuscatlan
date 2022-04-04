@@ -2,9 +2,11 @@ package com.landony.data.di
 
 import com.landony.data.api.CuscatlanApiService
 import com.landony.data.repositories.CommentsByPostRepositoryImpl
+import com.landony.data.repositories.PhotosByPostRepositoryImpl
 import com.landony.data.repositories.PostsRepositoryImpl
 import com.landony.data.util.DispatcherProvider
 import com.landony.domain.repositories.CommentsByPostRepository
+import com.landony.domain.repositories.PhotosByPostRepository
 import com.landony.domain.repositories.PostsRepository
 import dagger.Module
 import dagger.Provides
@@ -40,6 +42,21 @@ object RepositoryModule {
         dispatcherProvider: DispatcherProvider
     ): CommentsByPostRepository {
         return CommentsByPostRepositoryImpl(
+            cuscatlanApiService,
+            dispatcherProvider
+        )
+    }
+
+    /**
+     * Repositories for Photos -------------------->
+     */
+    @Provides
+    fun providePhotosByPostRepository(
+        @CuscatlanServices
+        cuscatlanApiService: CuscatlanApiService,
+        dispatcherProvider: DispatcherProvider
+    ): PhotosByPostRepository {
+        return PhotosByPostRepositoryImpl(
             cuscatlanApiService,
             dispatcherProvider
         )
