@@ -7,6 +7,31 @@
     android:background="@color/white"
     tools:context=".ui.MainActivity">
 
+    <LinearLayout
+        android:id="@+id/container_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="25dp"
+        android:background="@drawable/rounded_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/searchPostsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="#00000000"
+            android:hint="Buscar posts"
+            android:importantForAutofill="no"
+            android:inputType="textAutoComplete"
+            android:singleLine="true" />
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/progressBar"
         style="@style/Widget.AppCompat.ProgressBar"
@@ -24,8 +49,12 @@
         android:id="@+id/list"
         android:name="com.landony.cuscatlan.ui.home.HomeFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layoutManager="LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_edit_text"
         tools:context=".ui.home.HomeFragment"
         tools:listitem="@layout/fragment_home" />
 

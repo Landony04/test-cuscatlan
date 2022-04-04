@@ -1,6 +1,8 @@
 package com.landony.cuscatlan.ui.home
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * A fragment representing a list of Items.
  */
 @AndroidEntryPoint
-open class HomeFragment : Fragment(), ItemSelectedCallback {
+open class HomeFragment : Fragment(), ItemSelectedCallback, TextWatcher {
 
     private var columnCount = 1
     private var isProgress = false
@@ -26,6 +28,9 @@ open class HomeFragment : Fragment(), ItemSelectedCallback {
     private val postsViewModel: PostsViewModel by activityViewModels()
     private lateinit var homeBinding: FragmentHomeListBinding
     private lateinit var adapter: HomeRecyclerViewAdapter
+
+    private var listValues: ArrayList<PostsUI> = arrayListOf()
+    private var filteredList: ArrayList<PostsUI> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +53,9 @@ open class HomeFragment : Fragment(), ItemSelectedCallback {
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity?)?.title = "POSTS"
         (activity as MainActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+        homeBinding.searchPostsEditText.addTextChangedListener(this)
+
         setUpObserver()
         postsViewModel.getAllPosts()
     }
@@ -64,6 +72,7 @@ open class HomeFragment : Fragment(), ItemSelectedCallback {
                 is Result.Success -> {
                     homeBinding.progressBar.visibility = View.GONE
                     homeBinding.list.visibility = View.VISIBLE
+                    listValues.addAll(it.data)
                     setupPostsAdapter(it.data)
                     isProgress = false
                 }
@@ -110,5 +119,25 @@ open class HomeFragment : Fragment(), ItemSelectedCallback {
                 )
             }
         }
+    }
+
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+    }
+
+    override fun onTextChanged(query: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        if (query.toString().length > 3 && !isProgress) {
+            filteredList.clear()
+            listValues.forEach {
+                if (it.title.contains(query.toString())) {
+                    filteredList.add(it)
+                }
+            }
+            adapter.updateList(filteredList)
+        } else if (query.toString().length < 3 && listValues.isNotEmpty()) {
+            adapter.updateList(listValues)
+        }
+    }
+
+    override fun afterTextChanged(p0: Editable?) {
     }
 }

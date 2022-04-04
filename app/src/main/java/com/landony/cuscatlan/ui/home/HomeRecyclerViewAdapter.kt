@@ -62,6 +62,12 @@ class HomeRecyclerViewAdapter(
         }
     }
 
+    fun updateList(filteredList: List<PostsUI>) {
+        values.clear()
+        values.addAll(filteredList)
+        notifyDataSetChanged()
+    }
+
     companion object {
         const val VIEW_PHOTOS = "PHOTOS"
         const val VIEW_COMMENTS = "COMMENTS"
