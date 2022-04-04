@@ -1,11 +1,9 @@
 package com.landony.data.di
 
 import com.landony.domain.repositories.CommentsByPostRepository
+import com.landony.domain.repositories.PhotosByPostRepository
 import com.landony.domain.repositories.PostsRepository
-import com.landony.domain.useCases.CommentsByPostUseCase
-import com.landony.domain.useCases.CommentsByPostUseCaseImpl
-import com.landony.domain.useCases.PostsUseCase
-import com.landony.domain.useCases.PostsUseCaseImpl
+import com.landony.domain.useCases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -37,4 +35,10 @@ object UseCaseModule {
     fun provideComments(
         commentsByPostRepository: CommentsByPostRepository
     ): CommentsByPostUseCase = CommentsByPostUseCaseImpl(commentsByPostRepository)
+
+    @Provides
+    @ViewModelScoped
+    fun providePhotos(
+        photosByPostRepository: PhotosByPostRepository
+    ): PhotosByPostUseCase = PhotosByPostUseCaseImpl(photosByPostRepository)
 }
