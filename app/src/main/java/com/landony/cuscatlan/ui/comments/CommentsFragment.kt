@@ -1,6 +1,8 @@
 package com.landony.cuscatlan.ui.comments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -19,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * A fragment representing a list of Items.
  */
 @AndroidEntryPoint
-class CommentsFragment : Fragment() {
+class CommentsFragment : Fragment(), TextWatcher {
 
     private var columnCount = 1
     private var idPost = ""
@@ -27,6 +29,9 @@ class CommentsFragment : Fragment() {
     private lateinit var fragmentCommentsBinding: FragmentCommentsListBinding
     private val postsViewModel: PostsViewModel by activityViewModels()
     private lateinit var commentsRecyclerViewAdapter: CommentsRecyclerViewAdapter
+
+    private var listValues: ArrayList<CommentsByPostResultUI> = arrayListOf()
+    private var filteredList: ArrayList<CommentsByPostResultUI> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +57,8 @@ class CommentsFragment : Fragment() {
         (activity as MainActivity?)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_arrow_back_24)
         (activity as MainActivity?)?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        fragmentCommentsBinding.searchCommentsEditText.addTextChangedListener(this)
+
         setUpObserver()
         postsViewModel.getCommentsByPost(idPost)
     }
@@ -67,6 +74,7 @@ class CommentsFragment : Fragment() {
                 is Result.Success -> {
                     fragmentCommentsBinding.progressBarComments.visibility = View.GONE
                     fragmentCommentsBinding.listComments.visibility = View.VISIBLE
+                    listValues.addAll(it.data)
                     setupPostsAdapter(it.data)
                 }
 
@@ -104,5 +112,25 @@ class CommentsFragment : Fragment() {
 
     companion object {
         const val ARG_COLUMN_COUNT = "column-count"
+    }
+
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+    }
+
+    override fun onTextChanged(query: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        if (query.toString().length > 3) {
+            filteredList.clear()
+            listValues.forEach {
+                if (it.body.contains(query.toString())) {
+                    filteredList.add(it)
+                }
+            }
+            commentsRecyclerViewAdapter.updateList(filteredList)
+        } else if (query.toString().length < 3 && listValues.isNotEmpty()) {
+            commentsRecyclerViewAdapter.updateList(listValues)
+        }
+    }
+
+    override fun afterTextChanged(p0: Editable?) {
     }
 }

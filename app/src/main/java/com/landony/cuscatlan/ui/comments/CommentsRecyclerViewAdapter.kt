@@ -14,7 +14,7 @@ import com.landony.domain.entities.CommentsByPostResultUI
  * TODO: Replace the implementation with code for your data type.
  */
 class CommentsRecyclerViewAdapter(
-    private val values: List<CommentsByPostResultUI>,
+    private val values: ArrayList<CommentsByPostResultUI>,
 ) : ListAdapter<CommentsByPostResultUI, RecyclerView.ViewHolder>(UserDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -44,6 +44,12 @@ class CommentsRecyclerViewAdapter(
     override fun getItemViewType(position: Int): Int {
         if (((position % 2) == 0)) return 1
         return 2
+    }
+
+    fun updateList(filteredList: List<CommentsByPostResultUI>) {
+        values.clear()
+        values.addAll(filteredList)
+        notifyDataSetChanged()
     }
 }
 
